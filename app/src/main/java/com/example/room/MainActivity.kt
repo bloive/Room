@@ -1,8 +1,14 @@
 package com.example.room
 
+import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log.d
+import android.view.Window
+import android.view.WindowManager
+import android.view.WindowMetrics
+import android.widget.Button
 import androidx.activity.viewModels
 import com.example.room.databinding.ActivityMainBinding
 
@@ -34,11 +40,34 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
+        binding.btnDialog.setOnClickListener {
+            showMyDialog()
+        }
+
     }
 
     private fun observe() {
         viewModel.users.observe(this, {
             d("users", "${it.size}")
         })
+    }
+
+    private fun showMyDialog() {
+        val dialog = Dialog(this)
+        dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(R.layout.dialog_view)
+
+        val displayMetrics = DisplayMetrics()
+
+        val params = dialog.window!!.attributes
+        params.width = WindowManager.LayoutParams.MATCH_PARENT
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT
+
+        dialog.findViewById<Button>(R.id.dialog_done).setOnClickListener {
+            dialog.hide()
+        }
+
+        dialog.show()
     }
 }
